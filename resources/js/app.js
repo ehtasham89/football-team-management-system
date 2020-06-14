@@ -1,4 +1,4 @@
-require('./bootstrap');
+require('./config/bootstrap');
 
 import 'es6-promise/auto'
 import axios from 'axios'
@@ -6,9 +6,10 @@ import Vue from 'vue'
 import VueAuth from '@websanova/vue-auth'
 import VueAxios from 'vue-axios'
 import VueRouter from 'vue-router'
-import Index from './Index'
+import Index from './src/Index'
 import auth from './config/auth'
-import router from './router'
+import router from './src/router'
+import store from './vuexStores';
 
 // Set Vue globally
 window.Vue = Vue
@@ -26,5 +27,6 @@ Vue.component('index', Index)
 
 const app = new Vue({
   el: '#app',
-  router
+  router,
+  store
 });

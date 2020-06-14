@@ -51,18 +51,19 @@
             email: app.email,
             password: app.password
           },
-          success: function() {
+          success: function(res) {
+            app.$store.dispatch("ADD_USER");
             // handle redirection
             app.success = true
             const redirectTo = '/'
             app.$router.push({name: redirectTo})
           },
-          error: function() {
+          error: function(res) {
             app.has_error = true
             app.error = res.response.data.error
           },
           rememberMe: true,
-          fetchUser: true
+          //fetchUser: true
         })
       }
     }

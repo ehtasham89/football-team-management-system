@@ -1,6 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <router-link :to="{name: 'home'}" class="navbar-brand">Football Team Management System</router-link>
+    <router-link :to="{name: 'dashboard'}" class="navbar-brand">Football Team Management System</router-link>
+    <div class="header-title" v-if="$auth.check() && user"> | Admin: {{user.name}}</div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,6 +30,8 @@
   </nav>
 </template>
 <script>
+  import { mapGetters } from "vuex";
+
   export default {
     data() {
       return {
@@ -50,12 +53,21 @@
       }
     },
     mounted() {
-      //
+        //reload page prevent user state empty
+        this.$store.dispatch("GET_USER");
+    },
+    computed: {
+      ...mapGetters(["user"]),
     }
   }
 </script>
 <style>
 .navbar {
   margin-bottom: 30px;
+}
+.header-title {
+  size: 12px;
+  color: #fff;
+  margin-top: 5px;
 }
 </style>

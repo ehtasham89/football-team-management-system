@@ -1,7 +1,8 @@
 import VueRouter from 'vue-router'
 // Components
-import Register from './components/Register'
-import Login from './components/Login'
+import Register from './auth/Register'
+import Login from './auth/Login'
+import NotFound from './components/NotFound'
 // Routes
 const routes = [
   {
@@ -18,6 +19,14 @@ const routes = [
     component: Login,
     meta: {
       auth: false
+    }
+  },
+  {
+    path: '/404',
+    name: 'not-found',
+    component: NotFound,
+    meta: {
+      auth: undefined
     }
   },
   // USER ROUTES

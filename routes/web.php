@@ -13,14 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-//Auth::routes();
-
-//Route::get('/home', 'HomeController@index')->name('home');
-
+//vue js routes
 Route::get('/{vue_capture?}', function () {
     return view('welcome'); //app
  })->where('vue_capture', '^(?!storage).*$'); 
