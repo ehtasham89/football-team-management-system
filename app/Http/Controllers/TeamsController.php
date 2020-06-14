@@ -39,8 +39,8 @@ class TeamsController extends Controller
         $v = Validator::make($request->all(), [
             'name' => 'required',
         ]);
-        if ($v->fails())
-        {
+
+        if ($v->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $v->errors()
@@ -85,7 +85,7 @@ class TeamsController extends Controller
             $player = $this->model->find($request->route('p_id'));
             $player->team_id = $request->route('t_id');
             $player->save();
-            
+
             return response()->json(['status' => 'success'], 201);
         } catch (\Exception $ex) {
             return response()->json(['status' => 'failed', 'message'=> $ex->getMessage()], 401);

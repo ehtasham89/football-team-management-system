@@ -28,8 +28,8 @@ class PlayersController extends Controller
         $v = Validator::make($request->all(), [
             'name' => 'required',
         ]);
-        if ($v->fails())
-        {
+
+        if ($v->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $v->errors()
@@ -75,6 +75,38 @@ class PlayersController extends Controller
             return response()->json(['status' => 'success'], 201);
         } catch (\Exception $ex) {
             return response()->json(['status' => 'failed', 'message'=> $ex->getMessage()], 401);
+        }
+    }
+
+    // import csv data
+    public function teamPlayerImport(Request $request, \App\Models\Teams $team) {
+        $v = Validator::make($request->all(), [
+            'data' => 'required',
+        ]);
+
+        if ($v->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $v->errors()
+            ], 422);
+        }
+
+        $data = json_decode($request->input('data'), true);
+
+        $teamDaya = $team->where('name', $data->team_name)->first();
+
+        $playerList = $data->player_list;
+
+        if($teamDaya->id) {
+            foreach($playerList as $player) {
+                $player->team_id = $teamDaya->id;
+            }
+
+            $this->model->insert($playerList);
+
+            return response()->json(['status' => 'success'], 200);
+        } else {
+            return response()->json(['status' => 'failed', 'message'=> 'team name not found'], 401);
         }
     }
 }

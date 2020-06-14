@@ -24,33 +24,35 @@ Route::prefix('v1')->group(function () {
         
         // Refresh the JWT Token
         Route::get('refresh', 'AuthController@refresh');
-        
-        // Below mention routes are available only for the authenticated users.
-        Route::middleware('auth:api')->group(function () {
+    });
+
+    // Below mention routes are available only for the authenticated users.
+    Route::middleware('auth:api')->group(function () {
+        Route::prefix('auth')->group(function () {
             // Get user info
             Route::get('user/{id?}', 'AuthController@user');
             // Logout user from application
             Route::post('logout', 'AuthController@logout');
         });
-    });
 
-    Route::prefix('teams')->group(function () {
-        // Below mention routes are available only for the authenticated users.
-        Route::middleware('auth:api')->group(function () {
+        // teams rest api routes
+        Route::prefix('teams')->group(function () {
             Route::get('/', 'TeamsController@getList');
-            Route::get('/{id}', 'TeamsController@getTeamPlayer');
-            Route::post('/new', 'TeamsController@create');
-            Route::put('/{id}/status/{status}', 'TeamsController@updateStatus');
+            Route::get('{id}', 'TeamsController@getTeamPlayer');
+            Route::post('new', 'TeamsController@create');
+            Route::put('{id}/status/{status}', 'TeamsController@updateStatus');
         });
-    });
 
-    Route::prefix('players')->group(function () {
-        Route::middleware('auth:api')->group(function () {
+        // players rest api routes
+        Route::prefix('players')->group(function () {
             Route::get('/', 'PlayersController@getList'); //unassinged list
-            Route::post('/new', 'PlayersController@create');
-            Route::put('/{id}/status/{status}', 'PlayersController@updateStatus');
-            Route::put('/{id}/type/{type}', 'PlayersController@changeType');
-            Route::put('/{id}/with/{p_id}/team/{t_id}', 'PlayersController@replacePlayer');
+            Route::post('new', 'PlayersController@create');
+            Route::put('{id}/status/{status}', 'PlayersController@updateStatus');
+            Route::put('{id}/type/{type}', 'PlayersController@changeType');
+            Route::put('{id}/with/{p_id}/team/{t_id}', 'PlayersController@replacePlayer');
         });
+
+        // csv import api routes
+        Route::get('csv/import', 'PlayersController@teamPlayerImport'); 
     });
 });
