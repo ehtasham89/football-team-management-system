@@ -33,4 +33,25 @@ Route::prefix('v1')->group(function () {
             Route::post('logout', 'AuthController@logout');
         });
     });
+
+    Route::prefix('teams')->group(function () {
+        // Below mention routes are available only for the authenticated users.
+        Route::middleware('auth:api')->group(function () {
+            Route::get('/', 'TeamsController@getList');
+            Route::get('/{team_id}', 'TeamsController@getTeamPlayer');
+            Route::post('/new', 'TeamsController@create');
+            Route::put('/status/{team_id}/{status}', 'TeamsController@updateStatus');
+        });
+    });
+
+    Route::prefix('players')->group(function () {
+        Route::middleware('auth:api')->group(function () {
+            Route::get('/', 'PlayersController@getList'); //unassinged list
+            Route::get('/{player_id}', 'PlayersController@getPlayer');
+            Route::post('/new', 'PlayersController@create');
+            Route::put('/status/{player_id}/{status}', 'PlayersController@updateStatus');
+            Route::put('/type/{player_id}/{type}', 'PlayersController@changeType');
+            Route::post('/replace-player/{team_id}', 'PlayersController@replacePlayer');
+        });
+    });
 });
