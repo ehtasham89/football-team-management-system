@@ -3163,7 +3163,7 @@ __webpack_require__.r(__webpack_exports__);
           password: app.password
         },
         success: function success(res) {
-          app.$store.dispatch("ADD_USER"); // handle redirection
+          app.$store.dispatch("GET_USER"); // handle redirection
 
           app.success = true;
           var redirectTo = '/';
@@ -3352,7 +3352,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   mounted: function mounted() {
     //reload page prevent user state empty
-    this.$store.dispatch("GET_USER");
+    this.$auth.check() && this.$store.dispatch("GET_USER");
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(["user"]))
 });
@@ -41248,7 +41248,7 @@ var render = function() {
         [_vm._v("Football Team Management System")]
       ),
       _vm._v(" "),
-      _vm.$auth.check() && _vm.user
+      _vm.$auth.check() && _vm.user && _vm.user.name
         ? _c("div", { staticClass: "header-title" }, [
             _vm._v(" | Admin: " + _vm._s(_vm.user.name))
           ])
@@ -58109,17 +58109,13 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var actions = {
-  ADD_USER: function ADD_USER(_ref, user) {
+  GET_USER: function GET_USER(_ref) {
     var commit = _ref.commit;
-    axios.get('/auth/user', user).then(function (res) {
-      res && res.data && commit('ADD_USER', res.data.data); //store auth user to store
+    axios.get('/auth/user').then(function (res) {
+      res && res.data && commit('GET_USER', res.data.data); //store auth user to store
     })["catch"](function (err) {
       console.log(err);
     });
-  },
-  GET_USER: function GET_USER(_ref2) {
-    var commit = _ref2.commit;
-    commit('GET_USER'); //store auth user to store
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (actions);
@@ -58156,9 +58152,6 @@ __webpack_require__.r(__webpack_exports__);
 var mutations = {
   USER_CACHE_REMOVED: function USER_CACHE_REMOVED(state, user) {
     state.toRemoveUser = user;
-  },
-  ADD_USER: function ADD_USER(state, user) {
-    state.user = user;
   },
   GET_USER: function GET_USER(state, user) {
     state.user = user;

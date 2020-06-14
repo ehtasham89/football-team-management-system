@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <router-link :to="{name: 'dashboard'}" class="navbar-brand">Football Team Management System</router-link>
-    <div class="header-title" v-if="$auth.check() && user"> | Admin: {{user.name}}</div>
+    <div class="header-title" v-if="$auth.check() && user && user.name"> | Admin: {{user.name}}</div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -54,7 +54,7 @@
     },
     mounted() {
         //reload page prevent user state empty
-        this.$store.dispatch("GET_USER");
+        this.$auth.check() && this.$store.dispatch("GET_USER");
     },
     computed: {
       ...mapGetters(["user"]),

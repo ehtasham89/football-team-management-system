@@ -52,7 +52,7 @@
             password: app.password
           },
           success: function(res) {
-            app.$store.dispatch("ADD_USER");
+            app.$store.dispatch("GET_USER");
             // handle redirection
             app.success = true
             const redirectTo = '/'
