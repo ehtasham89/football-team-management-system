@@ -1,14 +1,9 @@
 let state = {
-    team: [
-        {
-            title: 'Royel',
-            status: false
-        }
-    ],
+    teams: [],
     toRemoveTeam: null,
     newTeam: {
-        title: '',
-        status: false,
+        name: '',
+        status: 1,
     }
 }
 

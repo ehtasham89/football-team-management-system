@@ -14,13 +14,13 @@ class TeamsController extends Controller
 
     // get all teams
     public function getList(Request $request) {
-        $teams = $this->model->all();
+        $teams = $this->model->orderBy('id', 'desc')->get();
 
         if ($teams->count()) {
             return response()->json(['status' => 'success', 'data' => $teams], 200);
         }
         
-        return response()->json(['status' => 'failed', 'data not found!'], 401);
+        return response()->json(['status' => 'failed', 'message' => 'data not found!'], 401);
     }
 
     // get team with player
@@ -54,7 +54,7 @@ class TeamsController extends Controller
             $teams->admin_id = Auth::user()->id;
             $teams->save();
 
-            return response()->json(['status' => 'success'], 201);
+            return response()->json(['status' => 'success', 'team_id' => $teams->id ], 201);
         } catch (\Exception $ex) {
             return response()->json(['status' => 'failed', 'message'=> $ex->getMessage()], 401);
         }

@@ -1,12 +1,5 @@
 let state = {
-    player: [
-        {
-            title: 'ali',
-            status: false,
-            isubstitute: false,
-            team: undefined
-        }
-    ],
+    players: [],
     toRemovePlayer: null,
     newPlayer: {
         title: '',

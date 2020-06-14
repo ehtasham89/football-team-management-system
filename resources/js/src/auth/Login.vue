@@ -55,7 +55,7 @@
             app.$store.dispatch("GET_USER");
             // handle redirection
             app.success = true
-            const redirectTo = '/'
+            const redirectTo = 'dashboard'
             app.$router.push({name: redirectTo})
           },
           error: function(res) {

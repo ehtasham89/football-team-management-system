@@ -28,5 +28,15 @@ class Teams extends Seeder
                 'admin_id' => 1
             ]);
         }
+
+        for($i = 0; $i<5; $i++) {
+            DB::table('players')->insert([
+                'name' => Str::random(10),
+                'type' => "player",
+                'team_id' => 0,
+                'status' => 1,
+                'admin_id' => 1
+            ]);
+        }
     }
 }

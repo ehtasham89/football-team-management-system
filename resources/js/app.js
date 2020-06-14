@@ -10,11 +10,19 @@ import Index from './src/Index'
 import auth from './config/auth'
 import router from './src/router'
 import store from './vuexStores';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
 // Set Vue globally
 window.Vue = Vue
 // Set Vue router
 Vue.router = router
+
+
+// Install BootstrapVue
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
+
 Vue.use(VueRouter)
 // Set Vue authentication
 Vue.use(VueAxios, axios)

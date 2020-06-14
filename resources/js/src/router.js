@@ -3,6 +3,10 @@ import VueRouter from 'vue-router'
 import Register from './auth/Register'
 import Login from './auth/Login'
 import NotFound from './components/NotFound'
+import DefaultView from './components/DefaultView'
+import Teams from './teams/Index';
+import Players from './players/Index';
+
 // Routes
 const routes = [
   {
@@ -33,11 +37,39 @@ const routes = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    //component: Dashboard,
+    component: Teams,
     meta: {
-      auth: true
+      auth: true,
+      title: 'Football Team Management System'
     }
   },
+  {
+    path: '/players',
+    name: 'players',
+    component: Players,
+    meta: {
+      auth: true,
+      title: 'Players'
+    }
+  },
+  {
+    path: '/',
+    //redirect: '/defaultview',
+    name: 'home',
+    meta: {
+      auth: false
+    },
+    component: DefaultView
+  },
+  {
+    path: '*',
+    redirect: '/404',
+    name: 'unknown',
+    meta: {
+      auth: undefined
+    }
+    //component: NotFound
+  }
 ]
 
 const router = new VueRouter({

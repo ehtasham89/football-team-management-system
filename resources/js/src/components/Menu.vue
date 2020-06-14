@@ -6,22 +6,15 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto" v-if="$auth.check(1)">
-          <li class="nav-item" v-for="(route, key) in routes.user" v-bind:key="route.path">
-            <router-link :to="{ name : route.path }" :key="key" class="nav-link">{{route.name}}</router-link>
-          </li>
-      </ul>
-      <ul class="navbar-nav mr-auto" v-if="$auth.check(2)">
-          <li class="nav-item" v-for="(route, key) in routes.user" v-bind:key="route.path">
-            <router-link :to="{ name : route.path }" :key="key" class="nav-link">{{route.name}}</router-link>
-          </li>
-      </ul>
       <ul class="navbar-nav ml-auto" v-if="!$auth.check()">
           <li class="nav-item" v-for="(route, key) in routes.unlogged" v-bind:key="route.path">
             <router-link :to="{ name : route.path }" :key="key" class="nav-link">{{route.name}}</router-link>
           </li>
       </ul>
       <ul class="navbar-nav ml-auto" v-if="$auth.check()">
+        <li class="nav-item" v-for="(route, key) in routes.user" v-bind:key="route.path">
+            <router-link :to="{ name : route.path }" :key="key" class="nav-link">{{route.name}}</router-link>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="#" @click.prevent="$auth.logout()">Logout</a>
         </li>
@@ -41,13 +34,10 @@
             { name: 'Register', path: 'register' },
             { name: 'Login', path: 'login'}
           ],
-          // LOGGED USER
-          user: [
-            { name: 'Dashboard', path: 'dashboard' }
-          ],
           // LOGGED ADMIN
-          admin: [
-            { name: 'Dashboard', path: 'admin.dashboard' }
+          user: [
+            { name: 'Teams', path: 'dashboard' },
+            { name: 'Players', path: 'players' }
           ]
         }
       }

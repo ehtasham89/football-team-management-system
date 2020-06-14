@@ -12,15 +12,15 @@ class PlayersController extends Controller
         $this->model = $players;
     }
 
-    // get all
+    // get all unassigned players
     public function getList(Request $request) {
-        $teams = $this->model->whereNull('team_id')->get();
+        $players = $this->model->where('team_id', 0)->orderBy('id', 'desc')->get();
 
-        if ($teams->count()) {
-            return response()->json(['status' => 'success', 'data' => $teams], 200);
+        if ($players->count()) {
+            return response()->json(['status' => 'success', 'data' => $players], 200);
         }
         
-        return response()->json(['status' => 'failed', 'data' => $teams, 'data not found!'], 401);
+        return response()->json(['status' => 'failed', 'message' => 'data not found!'], 401);
     }
 
     // create new 
@@ -44,7 +44,7 @@ class PlayersController extends Controller
             $player->type = null !== $request->input('type') ? $request->input('type') : 'player';
             $player->save();
 
-            return response()->json(['status' => 'success'], 201);
+            return response()->json(['status' => 'success', 'player_id' => $player->id], 201);
         } catch (\Exception $ex) {
             return response()->json(['status' => 'failed', 'message'=> $ex->getMessage()], 401);
         }
