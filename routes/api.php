@@ -48,8 +48,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/', 'PlayersController@getList'); //unassinged list
             Route::post('new', 'PlayersController@create');
             Route::put('{id}/status/{status}', 'PlayersController@updateStatus');
-            Route::put('{id}/type/{type}', 'PlayersController@changeType');
-            Route::put('{id}/with/{p_id}/team/{t_id}', 'PlayersController@replacePlayer');
+            Route::put('{id}/with/{p_id}/type/{type}', 'PlayersController@assignPlayer');
         });
 
         // csv import api routes

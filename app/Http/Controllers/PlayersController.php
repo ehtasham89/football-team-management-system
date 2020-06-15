@@ -14,7 +14,7 @@ class PlayersController extends Controller
 
     // get all unassigned players
     public function getList(Request $request) {
-        $players = $this->model->where('team_id', 0)->orderBy('id', 'desc')->get();
+        $players = $this->model->orderBy('id', 'desc')->get();
 
         if ($players->count()) {
             return response()->json(['status' => 'success', 'data' => $players], 200);
@@ -40,6 +40,7 @@ class PlayersController extends Controller
             $player = $this->model;
             $player->name = $request->input('name');
             $player->status = 1;
+            $player->team_id = $request->input('team_id');
             $player->admin_id = Auth::user()->id;
             $player->type = null !== $request->input('type') ? $request->input('type') : 'player';
             $player->save();
@@ -64,12 +65,18 @@ class PlayersController extends Controller
         }
     }
 
-    // change type 
-    public function changeType(Request $request) {
+    // Assign Player To Team
+    public function assignPlayer(Request $request) {
         $player = $this->model->find($request->route('id'));
+        $teamId = 0;
+
+        if ($request->route('team_id')) {
+            $teamId = $request->route('team_id');
+        }
 
         try {
-            $player->status = $request->route('type');
+            $player->type = $request->route('type');
+            $player->team_id = $teamId;
             $player->save();
 
             return response()->json(['status' => 'success'], 201);

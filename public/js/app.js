@@ -3471,6 +3471,53 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: {
@@ -3492,10 +3539,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         status: 0
       });
     },
+    assign: function assign(id) {
+      this.selectedId = id;
+      this.$refs['select-player-type'].show();
+    },
+    unAssign: function unAssign(id) {
+      this.$store.dispatch("PLAYER_TEAM_UPDATE", {
+        id: id,
+        team_id: 0,
+        type: "player"
+      });
+    },
     onSubmit: function onSubmit(evt) {
       evt.preventDefault();
       this.hideModal();
       this.$store.dispatch("ADD_PLAYER", this.form);
+    },
+    assignToTeam: function assignToTeam(type) {
+      this.$refs['select-player-type'].hide();
+      this.$store.dispatch("PLAYER_TEAM_UPDATE", {
+        id: this.selectedId,
+        team_id: this.params.team_id,
+        type: type
+      });
     }
   },
   mounted: function mounted() {
@@ -3509,13 +3575,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     players: "players"
   })),
   data: function data() {
+    var _teamId = this.$router.currentRoute.params.team_id;
+    var action = _teamId ? ['action'] : [];
     return {
+      selectedId: undefined,
       loading: true,
+      params: this.$router.currentRoute.params,
       form: {
         name: "",
+        type: "player",
+        team_id: _teamId || 0,
         status: 1
       },
-      fields: ['name', 'Assinged Player', 'status']
+      fields: ['name', 'type', 'status'].concat(action)
     };
   }
 });
@@ -84591,7 +84663,142 @@ var render = function() {
           )
         : _vm._e(),
       _vm._v(" "),
-      _c("b-card", { staticClass: "text-center" }, [_vm._v("Manage Player")]),
+      _vm.params.team_id
+        ? _c("b-card", { staticClass: "text-center" }, [
+            _c("b", [
+              _vm._v(
+                "Players List For Team: " +
+                  _vm._s(_vm.params.name) +
+                  " (Total Player: " +
+                  _vm._s(
+                    _vm.players.filter(function(e) {
+                      return e.team_id === _vm.params.team_id
+                    }).length
+                  ) +
+                  ")"
+              )
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.params.team_id
+        ? _c("b-table", {
+            attrs: {
+              striped: "",
+              hover: "",
+              fields: _vm.fields,
+              items: _vm.players.filter(function(e) {
+                return e.team_id === _vm.params.team_id
+              }),
+              responsive: "sm"
+            },
+            scopedSlots: _vm._u(
+              [
+                {
+                  key: "cell(name)",
+                  fn: function(data) {
+                    return [
+                      _c("b", { staticClass: "text-info" }, [
+                        _vm._v(_vm._s(data.item.name.toUpperCase()))
+                      ])
+                    ]
+                  }
+                },
+                {
+                  key: "cell(type)",
+                  fn: function(data) {
+                    return [
+                      _c("b", { staticClass: "text-info" }, [
+                        _vm._v(_vm._s(data.item.type.toUpperCase()))
+                      ])
+                    ]
+                  }
+                },
+                {
+                  key: "cell(status)",
+                  fn: function(data) {
+                    return [
+                      data.item.status === 1
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-outline-primary",
+                              attrs: { id: "btn-active" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.deactivate(data.item.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Active")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      data.item.status === 0
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-outline-secondary",
+                              attrs: { id: "btn-deactive" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.activate(data.item.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Deactive")]
+                          )
+                        : _vm._e()
+                    ]
+                  }
+                },
+                {
+                  key: "cell()",
+                  fn: function(data) {
+                    return [
+                      data.item.status === 1
+                        ? _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-outline-primary",
+                              attrs: { id: "btn-active" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.unAssign(data.item.id)
+                                }
+                              }
+                            },
+                            [_vm._v("Un-Assign")]
+                          )
+                        : _vm._e()
+                    ]
+                  }
+                }
+              ],
+              null,
+              false,
+              4007179002
+            )
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _c("b-card", { staticClass: "text-center" }, [
+        _vm.params.team_id
+          ? _c("b", [
+              _vm._v(
+                "Available Player For Assignment (" +
+                  _vm._s(
+                    _vm.players.filter(function(e) {
+                      return e.team_id === 0
+                    }).length
+                  ) +
+                  ")"
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        !_vm.params.team_id ? _c("b", [_vm._v("Manage Players")]) : _vm._e()
+      ]),
       _vm._v(" "),
       _c(
         "b-button",
@@ -84604,11 +84811,14 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("b-table", {
+        staticStyle: { "margin-bottom": "50px" },
         attrs: {
           striped: "",
           hover: "",
           fields: _vm.fields,
-          items: _vm.players,
+          items: _vm.players.filter(function(e) {
+            return e.team_id === 0
+          }),
           responsive: "sm"
         },
         scopedSlots: _vm._u([
@@ -84623,19 +84833,12 @@ var render = function() {
             }
           },
           {
-            key: "cell()",
+            key: "cell(type)",
             fn: function(data) {
               return [
-                _c(
-                  "router-link",
-                  {
-                    staticClass: "btn btn-outline-info",
-                    attrs: {
-                      to: { name: "players", params: { team_id: data.item.id } }
-                    }
-                  },
-                  [_vm._v("Player List")]
-                )
+                _c("b", { staticClass: "text-info" }, [
+                  _vm._v(_vm._s(data.item.type.toUpperCase()))
+                ])
               ]
             }
           },
@@ -84672,6 +84875,28 @@ var render = function() {
                         }
                       },
                       [_vm._v("Deactive")]
+                    )
+                  : _vm._e()
+              ]
+            }
+          },
+          {
+            key: "cell()",
+            fn: function(data) {
+              return [
+                data.item.status === 1
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-outline-primary",
+                        attrs: { id: "btn-active" },
+                        on: {
+                          click: function($event) {
+                            return _vm.assign(data.item.id)
+                          }
+                        }
+                      },
+                      [_vm._v("Assign Player To Team")]
                     )
                   : _vm._e()
               ]
@@ -84715,7 +84940,7 @@ var render = function() {
                             attrs: {
                               id: "inline-form-input-name",
                               required: "",
-                              placeholder: "Royel CC"
+                              placeholder: "John"
                             },
                             model: {
                               value: _vm.form.name,
@@ -84740,6 +84965,42 @@ var render = function() {
                           )
                         ],
                         1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        {
+                          staticStyle: { "text-align": "left" },
+                          attrs: { cols: "12" }
+                        },
+                        [
+                          _vm.params.team_id
+                            ? _c(
+                                "b-form-checkbox",
+                                {
+                                  attrs: {
+                                    id: "checkbox-1",
+                                    name: "type",
+                                    value: "substitute",
+                                    "unchecked-value": "player"
+                                  },
+                                  model: {
+                                    value: _vm.form.type,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.form, "type", $$v)
+                                    },
+                                    expression: "form.type"
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                      Is Substitute Player\n                  "
+                                  )
+                                ]
+                              )
+                            : _vm._e()
+                        ],
+                        1
                       )
                     ],
                     1
@@ -84752,7 +85013,52 @@ var render = function() {
           )
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _vm.params.team_id
+        ? _c(
+            "b-modal",
+            {
+              ref: "select-player-type",
+              attrs: { "hide-footer": "", title: "Select Player Typer" }
+            },
+            [
+              _c(
+                "b-container",
+                { staticClass: "d-block text-center" },
+                [
+                  _c(
+                    "b-button",
+                    {
+                      attrs: { variant: "primary" },
+                      on: {
+                        click: function($event) {
+                          return _vm.assignToTeam("player")
+                        }
+                      }
+                    },
+                    [_vm._v("As a player")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "b-button",
+                    {
+                      attrs: { variant: "primary" },
+                      on: {
+                        click: function($event) {
+                          return _vm.assignToTeam("substitute")
+                        }
+                      }
+                    },
+                    [_vm._v("As a substitute player")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        : _vm._e()
     ],
     1
   )
@@ -84836,7 +85142,10 @@ var render = function() {
                   {
                     staticClass: "btn btn-outline-info",
                     attrs: {
-                      to: { name: "players", params: { team_id: data.item.id } }
+                      to: {
+                        name: "players",
+                        params: { team_id: data.item.id, name: data.item.name }
+                      }
                     }
                   },
                   [_vm._v("Player List")]
@@ -102129,6 +102438,15 @@ var actions = {
       alert("error!");
       console.log(err);
     });
+  },
+  PLAYER_TEAM_UPDATE: function PLAYER_TEAM_UPDATE(_ref5, player) {
+    var commit = _ref5.commit;
+    axios.put("/players/".concat(player.id, "/with/").concat(player.team_id, "/type/").concat(player.type)).then(function (res) {
+      commit("PLAYER_TEAM_UPDATE", player);
+    })["catch"](function (err) {
+      alert("error!");
+      console.log(err);
+    });
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (actions);
@@ -102198,6 +102516,15 @@ var mutations = {
     for (var i in state.players) {
       if (state.players[i].id == player.id) {
         state.players[i].status = player.status;
+        break; //Stop this loop, we found it!
+      }
+    }
+  },
+  PLAYER_TEAM_UPDATE: function PLAYER_TEAM_UPDATE(state, player) {
+    for (var i in state.players) {
+      if (state.players[i].id == player.id) {
+        state.players[i].type = player.type;
+        state.players[i].team_id = player.team_id;
         break; //Stop this loop, we found it!
       }
     }

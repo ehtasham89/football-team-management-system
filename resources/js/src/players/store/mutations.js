@@ -19,6 +19,15 @@ let mutations = {
                 break; //Stop this loop, we found it!
             }
         }
+    },
+    PLAYER_TEAM_UPDATE(state, player) {
+        for (var i in state.players) {
+            if (state.players[i].id == player.id) {
+                state.players[i].type = player.type;
+                state.players[i].team_id = player.team_id;
+                break; //Stop this loop, we found it!
+            }
+        }
     }
 }
 

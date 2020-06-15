@@ -16,7 +16,7 @@
       <!-- A virtual column -->
       <template v-slot:cell()="data">
         <!-- named route -->
-        <router-link class="btn btn-outline-info" :to="{ name: 'players', params: { team_id: data.item.id }}">Player List</router-link>
+        <router-link class="btn btn-outline-info" :to="{ name: 'players', params: { team_id: data.item.id, name: data.item.name }}">Player List</router-link>
       </template>
       <!-- A virtual composite column -->
       <template v-slot:cell(status)="data">  

@@ -4,24 +4,51 @@
       <b-spinner variant="primary" label="Text Centered"></b-spinner>
     </div>
 
-    <b-card class="text-center">Manage Player</b-card>
+    <b-card class="text-center" v-if="params.team_id">
+        <b>Players List For Team: {{params.name}} (Total Player: {{players.filter(e => e.team_id === params.team_id).length}})</b>
+    </b-card>
 
-    <b-button id="show-btn" class="btn-add" @click="showModal">Add New Player</b-button>
-
-    <b-table striped hover :fields="fields" :items="players" responsive="sm">
+    <b-table striped hover :fields="fields" v-if="params.team_id" :items="players.filter(e => e.team_id === params.team_id)" responsive="sm">
       <!-- A custom formatted column -->
       <template v-slot:cell(name)="data">
         <b class="text-info">{{ data.item.name.toUpperCase() }}</b>
       </template>
-      <!-- A virtual column -->
-      <template v-slot:cell()="data">
-        <!-- named route -->
-        <router-link class="btn btn-outline-info" :to="{ name: 'players', params: { team_id: data.item.id }}">Player List</router-link>
+      <template v-slot:cell(type)="data">
+        <b class="text-info">{{data.item.type.toUpperCase()}}</b>
       </template>
       <!-- A virtual composite column -->
       <template v-slot:cell(status)="data">  
         <button id="btn-active" v-if="data.item.status === 1" class="btn btn-outline-primary" @click="deactivate(data.item.id)">Active</button>
         <button id="btn-deactive" v-if="data.item.status === 0" class="btn btn-outline-secondary" @click="activate(data.item.id)">Deactive</button>
+      </template>
+      <template v-slot:cell()="data">  
+        <button id="btn-active" v-if="data.item.status === 1" class="btn btn-outline-primary" @click="unAssign(data.item.id)">Un-Assign</button>
+      </template>
+    </b-table>
+
+    <b-card class="text-center">
+        <b v-if="params.team_id">Available Player For Assignment ({{players.filter(e => e.team_id === 0).length}})</b>
+        <b v-if="!params.team_id">Manage Players</b>
+    </b-card>
+
+    <b-button id="show-btn" class="btn-add" @click="showModal">Add New Player</b-button>
+
+    <!-- Un Assigned player list -->
+    <b-table striped hover :fields="fields" style="margin-bottom: 50px" :items="players.filter(e => e.team_id === 0)" responsive="sm">
+      <!-- A custom formatted column -->
+      <template v-slot:cell(name)="data">
+        <b class="text-info">{{ data.item.name.toUpperCase() }}</b>
+      </template>
+      <template v-slot:cell(type)="data">
+        <b class="text-info">{{data.item.type.toUpperCase()}}</b>
+      </template>
+      <!-- A virtual composite column -->
+      <template v-slot:cell(status)="data">  
+        <button id="btn-active" v-if="data.item.status === 1" class="btn btn-outline-primary" @click="deactivate(data.item.id)">Active</button>
+        <button id="btn-deactive" v-if="data.item.status === 0" class="btn btn-outline-secondary" @click="activate(data.item.id)">Deactive</button>
+      </template>
+      <template v-slot:cell()="data">  
+        <button id="btn-active" v-if="data.item.status === 1" class="btn btn-outline-primary" @click="assign(data.item.id)">Assign Player To Team</button>
       </template>
     </b-table>
 
@@ -34,15 +61,35 @@
                     <b-input
                         id="inline-form-input-name"
                         required
-                        placeholder="Royel CC"
+                        placeholder="John"
                         v-model="form.name"
                     ></b-input>
                 </b-col>
+                
                 <b-col cols="2">
                     <b-button type="submit" variant="primary">Save</b-button>
                 </b-col>
+                <b-col cols="12" style="text-align: left">
+                    <b-form-checkbox
+                        id="checkbox-1"
+                        v-if="params.team_id"
+                        v-model="form.type"
+                        name="type"
+                        value="substitute"
+                        unchecked-value="player"
+                    >
+                        Is Substitute Player
+                    </b-form-checkbox>
+                </b-col>
             </b-row>
         </b-form>
+      </b-container>
+    </b-modal>
+
+    <b-modal ref="select-player-type" hide-footer title="Select Player Typer" v-if="params.team_id">
+      <b-container class="d-block text-center">
+          <b-button variant="primary" @click="assignToTeam('player')">As a player</b-button>
+          <b-button variant="primary" @click="assignToTeam('substitute')">As a substitute player</b-button>
       </b-container>
     </b-modal>
 
@@ -66,10 +113,22 @@
         deactivate(id) {
           this.$store.dispatch("PLAYER_STATUS_UPDATE", {id, status: 0});
         },
+        assign(id) {
+            this.selectedId = id;
+            this.$refs['select-player-type'].show();
+        },
+        unAssign(id) {
+          this.$store.dispatch("PLAYER_TEAM_UPDATE", {id, team_id: 0, type: "player"});
+        },
         onSubmit(evt) {
           evt.preventDefault();
           this.hideModal();
           this.$store.dispatch("ADD_PLAYER", this.form);
+        },
+        assignToTeam(type) {
+            this.$refs['select-player-type'].hide();
+
+            this.$store.dispatch("PLAYER_TEAM_UPDATE", {id: this.selectedId, team_id: this.params.team_id, type});
         }
     },
     mounted() {
@@ -79,14 +138,21 @@
       ...mapGetters({players: "players"}),
     },
     data() {
-      return {
-        loading: true,
-        form: {
-          name: "",
-          status: 1
-        },
-        fields: ['name', 'Assinged Player', 'status']
-      }
+        const _teamId = this.$router.currentRoute.params.team_id;
+        const action = _teamId ? ['action']:[];
+
+        return {
+            selectedId: undefined,
+            loading: true,
+            params: this.$router.currentRoute.params,
+            form: {
+                name: "",
+                type: "player",
+                team_id: _teamId || 0,
+                status: 1
+            },
+            fields: ['name', 'type', 'status', ...action]
+        }
     }
   }
 </script>
