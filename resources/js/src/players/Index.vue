@@ -7,6 +7,8 @@
     <b-card class="text-center" v-if="params.team_id">
         <b>Players List For Team: {{params.name}} (Total Player: {{players.filter(e => e.team_id === params.team_id).length}})</b>
     </b-card>
+    
+    <b-button id="show-file-btn" class="btn-add" @click="showFileUploadBox" v-if="params.team_id">Import Players</b-button>
 
     <b-table striped hover :fields="fields" v-if="params.team_id" :items="players.filter(e => e.team_id === params.team_id)" responsive="sm">
       <!-- A custom formatted column -->
@@ -18,11 +20,11 @@
       </template>
       <!-- A virtual composite column -->
       <template v-slot:cell(status)="data">  
-        <button id="btn-active" v-if="data.item.status === 1" class="btn btn-outline-primary" @click="deactivate(data.item.id)">Active</button>
-        <button id="btn-deactive" v-if="data.item.status === 0" class="btn btn-outline-secondary" @click="activate(data.item.id)">Deactive</button>
+        <button id="btn-active" v-if="data.item.status" class="btn btn-outline-primary" @click="deactivate(data.item.id)">Active</button>
+        <button id="btn-deactive" v-if="!data.item.status" class="btn btn-outline-secondary" @click="activate(data.item.id)">Deactive</button>
       </template>
       <template v-slot:cell()="data">  
-        <button id="btn-active" v-if="data.item.status === 1" class="btn btn-outline-primary" @click="unAssign(data.item.id)">Un-Assign</button>
+        <button id="btn-active" class="btn btn-outline-primary" @click="unAssign(data.item.id)">Un-Assign</button>
       </template>
     </b-table>
 
@@ -48,7 +50,7 @@
         <button id="btn-deactive" v-if="data.item.status === 0" class="btn btn-outline-secondary" @click="activate(data.item.id)">Deactive</button>
       </template>
       <template v-slot:cell()="data">  
-        <button id="btn-active" v-if="data.item.status === 1" class="btn btn-outline-primary" @click="assign(data.item.id)">Assign Player To Team</button>
+        <button id="btn-active" class="btn btn-outline-primary" @click="assign(data.item.id)">Assign Player To Team</button>
       </template>
     </b-table>
 
@@ -93,11 +95,16 @@
       </b-container>
     </b-modal>
 
+    <b-modal ref="fileUploadBox" hide-footer title="Select CSV File For This Team" v-if="params.team_id">
+      <FileReader :team-id="params.team_id" :hide-file-upload-box="hideFileUploadBox"></FileReader>
+    </b-modal>
+
   </div>
 </template>
 
 <script>
   import { mapGetters, m } from "vuex";
+  import FileReader from "./../components/FileReader";
   
   export default {
     methods: {
@@ -129,6 +136,12 @@
             this.$refs['select-player-type'].hide();
 
             this.$store.dispatch("PLAYER_TEAM_UPDATE", {id: this.selectedId, team_id: this.params.team_id, type});
+        },
+        showFileUploadBox() {
+            this.$refs['fileUploadBox'].show();
+        },
+        hideFileUploadBox() {
+            this.$refs['fileUploadBox'].hide();
         }
     },
     mounted() {
@@ -153,6 +166,9 @@
             },
             fields: ['name', 'type', 'status', ...action]
         }
+    },
+    components: {
+        FileReader
     }
   }
 </script>

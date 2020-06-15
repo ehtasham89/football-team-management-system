@@ -1,3 +1,5 @@
+import csvToObjectArray from "./../../helpers/csvHelper"
+
 let actions = {
     ADD_PLAYER({commit}, player) {
         axios.post('/players/new', player).then(res => {
@@ -40,6 +42,16 @@ let actions = {
     PLAYER_TEAM_UPDATE({commit}, player) {
         axios.put(`/players/${player.id}/with/${player.team_id}/type/${player.type}`).then(res => {
             commit("PLAYER_TEAM_UPDATE", player);
+        }).catch(err => {
+          alert("error!");
+            console.log(err)
+        })
+    },
+    IMPORT_TEAM_PLAYER({commit}, csv) {
+        const playersData = csvToObjectArray(csv);
+
+        axios.post(`/csv/import`, {data: csvToObjectArray(csv)}).then(res => {
+            commit("IMPORT_TEAM_PLAYER", playersData);
         }).catch(err => {
           alert("error!");
             console.log(err)

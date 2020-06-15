@@ -86,7 +86,7 @@ class PlayersController extends Controller
     }
 
     // import csv data
-    public function teamPlayerImport(Request $request, \App\Models\Teams $team) {
+    public function teamPlayerImport(Request $request) {
         $v = Validator::make($request->all(), [
             'data' => 'required',
         ]);
@@ -98,22 +98,18 @@ class PlayersController extends Controller
             ], 422);
         }
 
-        $data = json_decode($request->input('data'), true);
+        try {
+            $data = $request->input('data');
 
-        $teamDaya = $team->where('name', $data->team_name)->first();
-
-        $playerList = $data->player_list;
-
-        if($teamDaya->id) {
-            foreach($playerList as $player) {
-                $player->team_id = $teamDaya->id;
+            for($i = 0; $i < count($data); $i++) {
+                $data[$i]['admin_id'] = Auth::user()->id;
             }
 
-            $this->model->insert($playerList);
+            $this->model->insert($data);
 
             return response()->json(['status' => 'success'], 200);
-        } else {
-            return response()->json(['status' => 'failed', 'message'=> 'team name not found'], 401);
+        } catch(\Exception $e) {
+            return response()->json(['status' => 'failed', 'message'=> $e->getMessage()], 401);
         }
     }
 }

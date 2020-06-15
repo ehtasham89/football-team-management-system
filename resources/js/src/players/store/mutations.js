@@ -28,6 +28,9 @@ let mutations = {
                 break; //Stop this loop, we found it!
             }
         }
+    },
+    IMPORT_TEAM_PLAYER(state, players) {
+        state.players = [...players, ...state.players]
     }
 }
 

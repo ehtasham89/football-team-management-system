@@ -52,6 +52,6 @@ Route::prefix('v1')->group(function () {
         });
 
         // csv import api routes
-        Route::get('csv/import', 'PlayersController@teamPlayerImport'); 
+        Route::post('csv/import', 'PlayersController@teamPlayerImport'); 
     });
 });
