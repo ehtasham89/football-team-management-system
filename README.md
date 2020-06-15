@@ -24,5 +24,29 @@ name: Laravel
       env:
         DB_CONNECTION: mysql
         DB_HOST: http://localhost
+    - name: run database migration and seedings
+      env: php artisan migrate
+      env: php artisan db:seed --class=Teams
     - name: to start application 
       run: php artisan serve
+
+###Use Case:
+
+1) Register new user (if database connection is configured then it will work)
+2) Login with email and password
+3) Create new team by clicking on 'Add New Team' button
+4) Click on Player List button
+5) Add new player by clicking on button
+6) Click on un-assign button to remove player from team
+7) Click on assign button from un-assigned player list and it will ask for which type of player you want. (player or subtitute player)
+8) Click in import player button
+9) Select .csv file only and click on upload button. 
+10) Go to header menu and click on logout and application session will destroyed on server and client app.
+
+### CSV file formate:
+
+name,type,status
+jawad,player,1
+Nomi,player,1
+
+------------------------------- Thank You --------------------------------
