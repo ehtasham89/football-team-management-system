@@ -3,9 +3,6 @@
 ### Laravel 7 | MySQL | VueJS | VueX | REST API | Bootstrap | JWT
 
 ### Docs:
-
-name: Laravel
-    
     steps:
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -43,10 +40,12 @@ name: Laravel
 9) Select .csv file only and click on upload button. 
 10) Go to header menu and click on logout and application session will destroyed on server and client app.
 
-### CSV file formate:
+###CSV file formate:
 
+```
 name,type,status
 jawad,player,1
 Nomi,player,1
+```
 
 ------------------------------- Thank You --------------------------------
